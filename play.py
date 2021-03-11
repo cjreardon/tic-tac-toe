@@ -91,6 +91,14 @@ def get_square(index):
         col = 2
     return row, col
 
+
+def is_taken(arr,row,col):
+    while arr[row][col] == "X" or arr[row][col] == "O":
+        index = input("Enter a square that is not taken. ")
+        row, col = get_square(index)
+    return row, col
+
+
 def two_player():
     turn = 0
     arr = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']]
@@ -101,19 +109,13 @@ def two_player():
             index = input("Player 1: Where would you like to place your X? ")
             print()
             row, col = get_square(index)
-            if arr[row][col] == "X" or arr[row][col] == "O":
-                index = input("Player 1: Enter a square that is not taken. ")
-                print()
-                row, col = get_square(index)
+            row, col = is_taken(arr,row,col)
             arr[row][col] = "X"
         else:
             index = input("Player 2: Where would you like to place your O? ")
             print()
             row, col = get_square(index)
-            if arr[row][col] == "X" or arr[row][col] == "O":
-                index = input("Player 2: Enter a square that is not taken. ")
-                print()
-                row, col = get_square(index)
+            row, col = is_taken(arr,row,col)
             arr[row][col] = "O"
     print()
     print_board(arr)
