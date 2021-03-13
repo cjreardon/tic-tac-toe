@@ -1,3 +1,5 @@
+import random
+
 def print_board(arr):
     print("     |     |     ")
     print("  "+arr[0]+"  |  "+arr[1]+"  |  "+arr[2]+"   ")
@@ -18,7 +20,7 @@ def winner(char):
     print("===== " + char + " WINS!! =====")
 
 
-def could_win(arr, char):
+def could_win(arr, char): # avoids extra print statements from is_over when playing computer
     if arr[0] == char and arr[1] == char and arr[2] == char:
         return True
     if arr[0] == char and arr[4] == char and arr[8] == char:
@@ -95,7 +97,7 @@ def two_player():
     print_board(arr)
 
 
-def one_player():
+def one_player(beatable):
     turn = 0
     arr = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
     while not is_over(arr, "X") and not is_over(arr, "O"):
@@ -110,7 +112,7 @@ def one_player():
             arr[index-1] = "X"
         else:
             print()
-            comp = computer_move(arr)
+            comp = computer_move(arr, beatable)
             arr[comp] = "O"
             comp = comp + 1
             print("Computer placed an O at " + str(comp))
@@ -118,12 +120,14 @@ def one_player():
     print_board(arr)
 
 
-def computer_move(arr):
-    move_bank = [x for x, char in enumerate(
+def computer_move(arr, beatable):
+    move_bank = [x for x, char in enumerate( #get all possible moves
         arr) if char != 'X' and char != "O"]
-    if 4 in move_bank:
+    if beatable == True:
+        return random.choice(move_bank)
+    if 4 in move_bank: #take the center
         return 4
-    for char in ["O", "X"]:
+    for char in ["O", "X"]: #take the winning move or block the human if they could win
         for i in move_bank:
             arr_copy = arr[:]
             arr_copy[i] = char
@@ -145,14 +149,18 @@ def computer_move(arr):
 
 def main():
     game_mode = input(
-        "Would you like to play against a human (1) or a computer (2)? ")
-    while(game_mode != "1" and game_mode != "2"):
-        game_mode = input("Please enter 1 or 2 ")
+        "Would you like to play against a human (1), a beatable computer (2), or an unbeatable computer (3)? ")
+    while(game_mode != "1" and game_mode != "2" and game_mode != "3"):
+        game_mode = input("Please enter 1, 2, or 3 ")
     if int(game_mode) == 1:
         two_player()
     elif int(game_mode) == 2:
+        beatable = True
+        one_player(beatable)
+    else:
         print("Good Luck ;)")
-        one_player()
+        beatable = False
+        one_player(beatable)
 
 
 main()
